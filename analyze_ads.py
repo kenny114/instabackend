@@ -20,6 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from config import RESEARCH_DIR, SERVICE_LINES
 from utils import chat_completion, vision_analysis, load_json, save_json, timestamp
+from db import get_ads, get_ad_count
 
 
 ANALYSIS_SYSTEM_PROMPT = """You are an expert advertising analyst specializing in recruitment and HR services marketing.
@@ -193,18 +194,22 @@ def main():
     service = SERVICE_LINES[args.service]
     print(f"Analyzing ads for: {service['name']}")
 
-    # Load research data
-    meta_path = RESEARCH_DIR / "meta_ads.json"
-    web_path = RESEARCH_DIR / "web_ads.json"
-
+    # Load research data — DB first, fall back to JSON
     all_ads = []
     all_images = []
 
-    if meta_path.exists():
-        meta_data = load_json(meta_path)
-        all_ads.extend(meta_data.get("ads", []))
-        print(f"  Loaded {len(meta_data.get('ads', []))} Meta ads")
+    db_count = get_ad_count(service=args.service)
+    if db_count > 0:
+        all_ads = get_ads(service=args.service)
+        print(f"  Loaded {len(all_ads)} Meta ads from DB")
+    else:
+        meta_path = RESEARCH_DIR / "meta_ads.json"
+        if meta_path.exists():
+            meta_data = load_json(meta_path)
+            all_ads.extend(meta_data.get("ads", []))
+            print(f"  Loaded {len(meta_data.get('ads', []))} Meta ads from JSON (no DB data yet)")
 
+    web_path = RESEARCH_DIR / "web_ads.json"
     if web_path.exists():
         web_data = load_json(web_path)
         all_ads.extend(web_data.get("articles", []))

@@ -39,6 +39,9 @@ def google_image_search(query: str, num_results: int = 10) -> list[dict]:
 
     try:
         data = fetch_json(GOOGLE_SEARCH_BASE_URL, params=params)
+        if "error" in data:
+            print(f"  Google API error for '{query}': {data['error'].get('message', data['error'])}")
+            return []
         items = data.get("items", [])
         results = []
         for item in items:
@@ -50,6 +53,8 @@ def google_image_search(query: str, num_results: int = 10) -> list[dict]:
                 "width": item.get("image", {}).get("width"),
                 "height": item.get("image", {}).get("height"),
             })
+        if not results:
+            print(f"  WARNING: Google returned no results for '{query}'.")
         return results
     except Exception as e:
         print(f"  Error searching '{query}': {e}")
@@ -59,7 +64,8 @@ def google_image_search(query: str, num_results: int = 10) -> list[dict]:
 def google_text_search(query: str, num_results: int = 10) -> list[dict]:
     """Search Google Custom Search for text results (ad copy, articles)."""
     if not GOOGLE_API_KEY or not GOOGLE_CSE_ID:
-        return _mock_text_results(query)
+        print("WARNING: GOOGLE_API_KEY or GOOGLE_CSE_ID not set for text search.")
+        return []
 
     params = {
         "key": GOOGLE_API_KEY,

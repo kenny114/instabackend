@@ -162,7 +162,7 @@ def health():
 
 @app.post("/tools/research_meta_ads")
 def research_meta_ads(req: ServiceRequest):
-    result = run_tool("scrape_meta_ads.py", ["--service", req.service])
+    result = run_tool("scrape_meta_ads.py", ["--service", req.service], timeout=700)
     return result
 
 
@@ -237,7 +237,7 @@ def run_full_pipeline(req: FullPipelineRequest):
     results = []
 
     # Step 1: Research
-    meta = run_tool("scrape_meta_ads.py", ["--service", req.service])
+    meta = run_tool("scrape_meta_ads.py", ["--service", req.service], timeout=700)
     results.append(f"[Research Meta] {meta['output'].split(chr(10))[-1]}")
 
     web = run_tool("scrape_web_ads.py", ["--service", req.service])

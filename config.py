@@ -27,7 +27,9 @@ META_APP_ID = os.getenv("META_APP_ID", "")
 META_APP_SECRET = os.getenv("META_APP_SECRET", "")
 META_ACCESS_TOKEN = os.getenv("META_ACCESS_TOKEN", "")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
-GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "")  # Custom Search Engine ID
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "")
+APIFY_API_TOKEN = os.getenv("APIFY_API_TOKEN", "")
+APIFY_ACTOR_ID = os.getenv("APIFY_ACTOR_ID", "curious_coder~facebook-ads-library-scraper")
 
 # ── Ad Sizes (width x height in pixels) ───────────────────────────────
 AD_SIZES = {
@@ -77,7 +79,7 @@ SERVICE_LINES = {
 }
 
 # ── Research Settings ──────────────────────────────────────────────────
-META_AD_LIBRARY_BASE_URL = "https://graph.facebook.com/v18.0/ads_archive"
+META_AD_LIBRARY_BASE_URL = "https://graph.facebook.com/v25.0/ads_archive"
 GOOGLE_SEARCH_BASE_URL = "https://www.googleapis.com/customsearch/v1"
 
 RESEARCH_SEARCH_TERMS = [
@@ -90,7 +92,7 @@ RESEARCH_SEARCH_TERMS = [
     "talent acquisition social post",
 ]
 
-MAX_RESEARCH_RESULTS = 50
+MAX_RESEARCH_RESULTS = 10
 
 # ── Generation Settings ────────────────────────────────────────────────
 OPENAI_MODEL = "gpt-4o"
